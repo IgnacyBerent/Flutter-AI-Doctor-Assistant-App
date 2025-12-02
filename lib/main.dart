@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:ai_doctor_assistant/layout.dart';
+import 'package:ai_doctor_assistant/ui/layout.dart';
 
 void main() {
   runApp(const MyApp());
