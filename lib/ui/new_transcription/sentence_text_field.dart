@@ -1,3 +1,5 @@
+import 'package:ai_doctor_assistant/ui/new_transcription/common.dart';
+import 'package:ai_doctor_assistant/ui/new_transcription/sentence_text_field_row.dart';
 import 'package:flutter/material.dart';
 
 class SentenceTextField extends StatefulWidget {
@@ -71,44 +73,24 @@ class _SentenceTextFieldState extends State<SentenceTextField> {
   @override
   Widget build(BuildContext context) {
     if (_isEditing) {
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: TextFormField(
-              controller: _controller,
-              focusNode: _focusNode,
-              maxLines: null,
-              style: const TextStyle(fontSize: 20),
-              onFieldSubmitted: (_) => _saveEdit(),
-            ),
-          ),
-          Column(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.check, color: Colors.green),
-                onPressed: _saveEdit,
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                tooltip: 'Save',
-              ),
-              IconButton(
-                icon: const Icon(Icons.delete, color: Colors.red),
-                onPressed: _delete,
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                tooltip: 'Delete',
-              ),
-            ],
-          ),
-        ],
+      return SentenceTextFieldRow(
+        textFormField: TextFormField(
+          controller: _controller,
+          focusNode: _focusNode,
+          maxLines: null,
+          style: textStyle,
+          onFieldSubmitted: (_) => _saveEdit(),
+          decoration: textFieldDecoration,
+        ),
+        onSave: _saveEdit,
+        onDelete: _delete,
       );
     }
     return InkWell(
       onTap: _startEditing,
       child: Text(
         widget.initialText,
-        style: const TextStyle(fontSize: 20),
+        style: textStyle,
         textAlign: TextAlign.start,
       ),
     );

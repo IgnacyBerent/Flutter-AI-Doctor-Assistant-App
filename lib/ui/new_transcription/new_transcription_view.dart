@@ -1,4 +1,6 @@
+import 'package:ai_doctor_assistant/ui/new_transcription/common.dart';
 import 'package:ai_doctor_assistant/ui/new_transcription/sentence_text_field.dart';
+import 'package:ai_doctor_assistant/ui/new_transcription/sentence_text_field_row.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
@@ -59,9 +61,12 @@ class _NewTransciptionViewState extends State<NewTransciptionView> {
   void _addSentence() {
     final newText = _newSentenceController.text.trim();
     setState(() {
-      _sentences.add(newText);
-      _isAddingNewSentence = false;
+      if (newText.isNotEmpty) {
+        _sentences.add(newText);
+        _isAddingNewSentence = false;
+      }
     });
+    _newSentenceController.clear();
     _focusNode.unfocus();
   }
 
@@ -70,6 +75,14 @@ class _NewTransciptionViewState extends State<NewTransciptionView> {
       _isAddingNewSentence = true;
       _focusNode.requestFocus();
     });
+  }
+
+  void _cancelAddingNewSentence() {
+    setState(() {
+      _isAddingNewSentence = false;
+    });
+    _newSentenceController.clear();
+    _focusNode.unfocus();
   }
 
   void _updateSentence(int index, String newText) {
@@ -99,31 +112,43 @@ class _NewTransciptionViewState extends State<NewTransciptionView> {
             final index = entry.key;
             final sentence = entry.value;
 
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: SentenceTextField(
-                initialText: sentence,
-                index: index,
-                onUpdate: _updateSentence,
-                onDelete: _deleteSentence,
-              ),
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: SentenceTextField(
+                    initialText: sentence,
+                    index: entry.key, // Use entry.key for index
+                    onUpdate: _updateSentence,
+                    onDelete: _deleteSentence,
+                  ),
+                ),
+                // 👇 Add the Divider after every item
+                const Divider(color: Colors.grey, height: 1, thickness: 1),
+              ],
             );
           }),
 
           if (_lastWords.isNotEmpty)
             Text(
               _lastWords,
-              style: const TextStyle(fontSize: 14),
+              style: const TextStyle(fontSize: 20, color: Colors.grey),
               textAlign: TextAlign.start,
             ),
 
           if (_isAddingNewSentence)
-            TextFormField(
-              controller: _newSentenceController,
-              focusNode: _focusNode,
-              maxLines: null,
-              style: const TextStyle(fontSize: 20),
-              onFieldSubmitted: (_) => _addSentence(),
+            SentenceTextFieldRow(
+              textFormField: TextFormField(
+                controller: _newSentenceController,
+                focusNode: _focusNode,
+                maxLines: null,
+                style: textStyle,
+                onFieldSubmitted: (_) => _addSentence(),
+                decoration: textFieldDecoration,
+              ),
+              onSave: _addSentence,
+              onDelete: _cancelAddingNewSentence,
             ),
 
           if (_speechToText.isListening)
@@ -136,9 +161,10 @@ class _NewTransciptionViewState extends State<NewTransciptionView> {
               icon: Icon(Icons.mic_off),
             ),
 
-          if (_speechToText.isNotListening)
+          if (_speechToText.isNotListening) ...[
+            SizedBox(height: 10),
             Row(
-              spacing: 5,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 IconButton(
                   alignment: Alignment.center,
@@ -162,6 +188,7 @@ class _NewTransciptionViewState extends State<NewTransciptionView> {
                 ),
               ],
             ),
+          ],
         ],
       ),
     );

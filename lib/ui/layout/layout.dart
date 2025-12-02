@@ -1,4 +1,5 @@
-import 'package:ai_doctor_assistant/ui/history_view.dart';
+import 'package:ai_doctor_assistant/api/auth.dart';
+import 'package:ai_doctor_assistant/ui/history/history_view.dart';
 import 'package:ai_doctor_assistant/ui/new_transcription/new_transcription_view.dart';
 import 'package:flutter/material.dart';
 
@@ -27,9 +28,18 @@ class _LayoutState extends State<Layout> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          _selectedIndex == 0 ? 'New Transciption' : 'History',
-          style: const TextStyle(color: Colors.white),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              _selectedIndex == 0 ? 'New Transciption' : 'History',
+              style: const TextStyle(color: Colors.white),
+            ),
+            IconButton(
+              onPressed: () => {logout()},
+              icon: Icon(Icons.logout, color: Colors.white),
+            ),
+          ],
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
