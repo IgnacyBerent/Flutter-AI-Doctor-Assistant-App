@@ -1,4 +1,4 @@
-import 'package:ai_doctor_assistant/api/jwt_token.dart';
+import 'package:ai_doctor_assistant/models/jwt_token.dart';
 import 'package:ai_doctor_assistant/ui/layout/layout.dart';
 import 'package:ai_doctor_assistant/ui/login/login_view.dart';
 import 'package:flutter/material.dart';

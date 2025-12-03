@@ -1,5 +1,5 @@
-import 'package:ai_doctor_assistant/ui/new_transcription/common.dart';
-import 'package:ai_doctor_assistant/ui/new_transcription/sentence_text_field_row.dart';
+import 'package:ai_doctor_assistant/ui/create_transcription/common.dart';
+import 'package:ai_doctor_assistant/ui/create_transcription/sentence_text_field_row.dart';
 import 'package:flutter/material.dart';
 
 class SentenceTextField extends StatefulWidget {

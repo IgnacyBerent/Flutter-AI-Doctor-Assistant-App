@@ -1,6 +1,6 @@
 import 'package:ai_doctor_assistant/api/auth.dart';
-import 'package:ai_doctor_assistant/ui/history/history_view.dart';
-import 'package:ai_doctor_assistant/ui/new_transcription/new_transcription_view.dart';
+import 'package:ai_doctor_assistant/ui/history/transcript_history_view.dart';
+import 'package:ai_doctor_assistant/ui/create_transcription/create_transcription_view.dart';
 import 'package:flutter/material.dart';
 
 class Layout extends StatefulWidget {
@@ -14,8 +14,8 @@ class _LayoutState extends State<Layout> {
   int _selectedIndex = 0;
 
   static const List<Widget> _widgetOptions = <Widget>[
-    NewTransciptionView(),
-    HistoryView(),
+    CreateTransciptionView(),
+    TranscriptHistoryView(),
   ];
 
   void _onItemTapped(int index) {

@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:ai_doctor_assistant/api/jwt_token.dart';
+import 'package:ai_doctor_assistant/models/jwt_token.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 

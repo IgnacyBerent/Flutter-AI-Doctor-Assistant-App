@@ -22,7 +22,6 @@ class _LoginViewState extends State<LoginView> {
     super.dispose();
   }
 
-  // Simulates a login attempt
   void _handleLogin() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -62,16 +61,13 @@ class _LoginViewState extends State<LoginView> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(32.0),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: 400, // Limit width for desktop/web view
-            ),
+            constraints: const BoxConstraints(maxWidth: 400),
             child: Form(
               key: _formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  // 1. Title/Logo Area
                   Text(
                     'Welcome Back',
                     style: TextStyle(
@@ -89,7 +85,6 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   const SizedBox(height: 48),
 
-                  // 2. Email Field
                   TextFormField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -110,7 +105,6 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   const SizedBox(height: 24),
 
-                  // 3. Password Field
                   TextFormField(
                     controller: _passwordController,
                     obscureText: _obscurePassword,
@@ -143,7 +137,6 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   const SizedBox(height: 16),
 
-                  // 4. Forgot Password Link
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
@@ -167,7 +160,6 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   const SizedBox(height: 32),
 
-                  // 5. Login Button
                   ElevatedButton(
                     onPressed: _isLoading ? null : _handleLogin,
                     style: ElevatedButton.styleFrom(
@@ -195,31 +187,6 @@ class _LoginViewState extends State<LoginView> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // 6. Register/Sign Up Prompt
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("Don't have an account?"),
-                      TextButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Navigate to registration screen.'),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
                   ),
                 ],
               ),

@@ -1,20 +1,23 @@
-import 'package:ai_doctor_assistant/ui/new_transcription/common.dart';
-import 'package:ai_doctor_assistant/ui/new_transcription/sentence_text_field.dart';
-import 'package:ai_doctor_assistant/ui/new_transcription/sentence_text_field_row.dart';
+import 'package:ai_doctor_assistant/api/api.dart';
+import 'package:ai_doctor_assistant/ui/create_transcription/common.dart';
+import 'package:ai_doctor_assistant/ui/create_transcription/confirmation_popup.dart';
+import 'package:ai_doctor_assistant/ui/create_transcription/sentence_text_field.dart';
+import 'package:ai_doctor_assistant/ui/create_transcription/sentence_text_field_row.dart';
+import 'package:ai_doctor_assistant/ui/transcription/transcription.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
 const _secondsBeforeStopping = 3;
 
-class NewTransciptionView extends StatefulWidget {
-  const NewTransciptionView({super.key});
+class CreateTransciptionView extends StatefulWidget {
+  const CreateTransciptionView({super.key});
 
   @override
-  State<NewTransciptionView> createState() => _NewTransciptionViewState();
+  State<CreateTransciptionView> createState() => _CreateTransciptionViewState();
 }
 
-class _NewTransciptionViewState extends State<NewTransciptionView> {
+class _CreateTransciptionViewState extends State<CreateTransciptionView> {
   final SpeechToText _speechToText = SpeechToText();
 
   final _sentences = <String>[];
@@ -101,6 +104,46 @@ class _NewTransciptionViewState extends State<NewTransciptionView> {
     }
   }
 
+  void _clear(BuildContext context) async {
+    final confirmed = await showConfirmationDialog(
+      context,
+      'Confirm Deletion',
+      'Are you sure you want to permanently delete this transcription? This action cannot be undone.',
+      "Delete",
+    );
+    if (confirmed) {
+      setState(() {
+        _sentences.clear();
+      });
+    }
+  }
+
+  void _onSubmit(BuildContext context) async {
+    final confirmed = await showConfirmationDialog(
+      context,
+      "Confirm Transcription",
+      "Are you sure you have finished transcription?",
+      "Yes",
+    );
+    if (confirmed && mounted) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => Transcription(
+            fetchFunction: () => getTranscription(_sentences.join()),
+            appBarText: "",
+          ),
+        ),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _newSentenceController.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -109,22 +152,18 @@ class _NewTransciptionViewState extends State<NewTransciptionView> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           ..._sentences.asMap().entries.map((entry) {
-            final index = entry.key;
-            final sentence = entry.value;
-
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: SentenceTextField(
-                    initialText: sentence,
-                    index: entry.key, // Use entry.key for index
+                    initialText: entry.value,
+                    index: entry.key,
                     onUpdate: _updateSentence,
                     onDelete: _deleteSentence,
                   ),
                 ),
-                // 👇 Add the Divider after every item
                 const Divider(color: Colors.grey, height: 1, thickness: 1),
               ],
             );
@@ -182,7 +221,13 @@ class _NewTransciptionViewState extends State<NewTransciptionView> {
                 ),
                 IconButton(
                   alignment: Alignment.center,
-                  onPressed: () => {},
+                  onPressed: () => _clear(context),
+                  tooltip: 'Clear',
+                  icon: Icon(Icons.delete),
+                ),
+                IconButton(
+                  alignment: Alignment.center,
+                  onPressed: () => _onSubmit(context),
                   tooltip: 'Finish',
                   icon: Icon(Icons.check_circle),
                 ),
